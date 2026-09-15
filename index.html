@@ -52,7 +52,16 @@ button,a{font:inherit}
 footer{text-align:center;color:var(--muted);padding:20px;margin-top:20px;border-top:2px solid #eadff0}
 label{display:block;margin:12px 0 8px;font-weight:bold;color:var(--ink)}
 input[type="checkbox"]{margin-right:8px;width:18px;height:18px;cursor:pointer}
-@media(max-width:420px){main{padding:10px}.grid{gap:3px}.ticket{font-size:10px;padding:7px 0}.stats{gap:6px}.stat{padding:12px 8px}.stat b{font-size:20px}.arrow{width:40px;height:40px;padding:8px 12px}.gallery-container{max-width:100%}}
+.surgery-section{background:linear-gradient(135deg,#fff9ff,#f0e9ff);border-radius:18px;padding:20px;margin:20px 0;border:2px solid #eadff0}
+.surgery-content{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.surgery-image{border-radius:15px;overflow:hidden;box-shadow:0 8px 24px rgba(112,69,165,0.2)}
+.surgery-image img{width:100%;height:auto;display:block;border-radius:15px}
+.surgery-info h3{margin-top:0;color:var(--purple);font-size:18px}
+.surgery-info p{line-height:1.8;color:var(--ink);margin:10px 0}
+.surgery-info strong{color:var(--purple)}
+.surgery-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
+.surgery-buttons .btn{padding:12px 16px;font-size:14px}
+@media(max-width:768px){.surgery-content{grid-template-columns:1fr}.grid{gap:3px}.ticket{font-size:10px;padding:7px 0}.stats{gap:6px}.stat{padding:12px 8px}.stat b{font-size:20px}.arrow{width:40px;height:40px;padding:8px 12px}.gallery-container{max-width:100%}.surgery-buttons{flex-direction:column}}
 </style>
 </head>
 <body>
@@ -93,6 +102,29 @@ input[type="checkbox"]{margin-right:8px;width:18px;height:18px;cursor:pointer}
   <div class="stat">
     <b>001–300</b>
     <span>🎫 Números</span>
+  </div>
+</section>
+
+<section class="surgery-section">
+  <h2>🏥 Sobre a Cirurgia da Meirinha</h2>
+  <div class="surgery-content">
+    <div class="surgery-image">
+      <img src="WhatsApp Image 2026-09-04 at 20.45.34.jpeg" alt="Orçamento da cirurgia">
+    </div>
+    <div class="surgery-info">
+      <h3>💉 Tratamento Necessário</h3>
+      <p>A Meirinha precisa de:</p>
+      <p><strong>✅ Consulta veterinária</strong><br>Avaliação completa da saúde</p>
+      <p><strong>✅ Exames laboratoriais</strong><br>Perfil pré-cirúrgico</p>
+      <p><strong>✅ Anestesia e internação</strong><br>Monitoramento completo</p>
+      <p><strong>✅ Cirurgia (Ovariohisterectomia)</strong><br>Procedimento com piometria</p>
+      <p><strong>✅ Pós-operatório</strong><br>Cuidados e medicações</p>
+      <p style="margin-top:20px;font-size:16px;color:var(--purple)"><strong>💰 Custo total: R$ 1.546,25</strong></p>
+      <div class="surgery-buttons">
+        <a href="meirinha.pdf" target="_blank" class="btn secondary">📄 Ver orçamento completo</a>
+        <a href="https://wa.me/5534998063486?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20a%20cirurgia%20da%20Meirinha" class="btn secondary">💬 Tirar dúvidas</a>
+      </div>
+    </div>
   </div>
 </section>
 
