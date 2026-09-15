@@ -5,99 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rifa Solidária da Meirinha</title>
 <style>
-:root{--purple:#7045a5;--light:#f8efff;--pink:#f5cce9;--ink:#33223e;--muted:#766b80}
+:root{--purple:#7045a5;--light:#f8efff;--pink:#f5cce9;--ink:#33223e;--muted:#766b80;--gradient1:#e9c8ed;--gradient2:#d8d0ff}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(135deg,#fff7fd,#f0e9ff);color:var(--ink)}
-main{max-width:850px;margin:auto;padding:18px}
-.hero{background:linear-gradient(135deg,#e9c8ed,#d8d0ff);border-radius:24px;padding:25px;text-align:center}
-.hero img{width:145px;height:145px;border-radius:50%;object-fit:cover;border:6px solid white;box-shadow:0 5px 20px #5b3d6825}
-h1{font-size:clamp(28px,6vw,48px);margin:15px 0 8px}
-.hero p{line-height:1.5}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-.stat,.panel{background:#fff;border:1px solid #eadff0;border-radius:18px;padding:16px;box-shadow:0 3px 15px #563c6c0d}
-.stat{text-align:center}.stat b{display:block;font-size:24px;color:var(--purple)}.stat span{font-size:13px;color:var(--muted)}
-.panel{margin:16px 0}h2{margin-top:0}
-.notice{background:var(--light);padding:13px;border-radius:12px;line-height:1.5}
-.pix{background:#f4eaff;padding:14px;border-radius:12px;overflow-wrap:anywhere}
+body{margin:0;font-family:'Arial',Helvetica,sans-serif;background:linear-gradient(135deg,#fff7fd 0%,#f0e9ff 100%);color:var(--ink)}
+main{max-width:900px;margin:auto;padding:18px}
+.hero{background:linear-gradient(135deg,var(--gradient1),var(--gradient2));border-radius:24px;padding:25px;text-align:center;box-shadow:0 8px 32px rgba(112,69,165,0.15)}
+h1{font-size:clamp(28px,6vw,48px);margin:15px 0 8px;background:linear-gradient(135deg,var(--purple),#9966cc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{line-height:1.6;font-size:16px;color:var(--ink)}
+.gallery-container{position:relative;max-width:400px;margin:20px auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(112,69,165,0.25);background:white}
+.gallery{position:relative;width:100%;padding-bottom:100%;overflow:hidden;border-radius:20px}
+.gallery img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.8s ease-in-out;top:0;left:0}
+.gallery img.active{opacity:1}
+.gallery-controls{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:10}
+.dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.3s ease;border:2px solid white}
+.dot.active{background:var(--purple);width:28px;border-radius:20px}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);font-size:28px;cursor:pointer;background:rgba(112,69,165,0.7);color:white;border:none;padding:10px 15px;border-radius:50%;transition:all 0.3s ease;z-index:9;width:45px;height:45px;display:flex;align-items:center;justify-content:center}
+.arrow:hover{background:var(--purple);transform:translateY(-50%) scale(1.1)}
+.prev{left:10px}
+.next{right:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+.stat{background:linear-gradient(135deg,#fff9ff,#f5f0ff);border:2px solid #eadff0;border-radius:18px;padding:18px;text-align:center;box-shadow:0 4px 15px rgba(112,69,165,0.1)}
+.stat b{display:block;font-size:24px;color:var(--purple);margin-bottom:5px}
+.stat span{font-size:13px;color:var(--muted);font-weight:bold}
+.panel{background:white;border:2px solid #eadff0;border-radius:18px;padding:20px;margin:20px 0;box-shadow:0 4px 15px rgba(112,69,165,0.08)}
+h2{margin-top:0;color:var(--purple);border-bottom:3px solid var(--pink);padding-bottom:10px}
+.notice{background:linear-gradient(135deg,var(--light),#f0e9ff);padding:15px;border-radius:12px;line-height:1.6;border-left:4px solid var(--purple)}
+.pix{background:linear-gradient(135deg,#f4eaff,#f8efff);padding:16px;border-radius:12px;overflow-wrap:anywhere;border:2px solid #e6d7ff}
+.pix strong{color:var(--purple);font-size:16px}
 button,a{font:inherit}
-.btn{display:inline-block;border:0;border-radius:11px;padding:12px 16px;background:var(--purple);color:white;font-weight:bold;cursor:pointer;text-decoration:none}
-.btn.secondary{background:white;color:var(--purple);border:1px solid #d8c7e5}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.field{width:100%;padding:12px;border:1px solid #d9cce2;border-radius:10px;margin:6px 0 12px;font-size:16px}
+.btn{display:inline-block;border:0;border-radius:11px;padding:14px 20px;background:linear-gradient(135deg,var(--purple),#9966cc);color:white;font-weight:bold;cursor:pointer;text-decoration:none;transition:all 0.3s ease;box-shadow:0 4px 15px rgba(112,69,165,0.3)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(112,69,165,0.4)}
+.btn.secondary{background:white;color:var(--purple);border:2px solid var(--purple);box-shadow:0 2px 10px rgba(112,69,165,0.15)}
+.btn.secondary:hover{background:var(--light)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.field{width:100%;padding:12px;border:2px solid #d9cce2;border-radius:10px;margin:8px 0 14px;font-size:16px;transition:all 0.3s ease}
+.field:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(112,69,165,0.1)}
 .grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px}
-.ticket{padding:8px 0;border:1px solid #dfd3e8;background:white;border-radius:7px;color:var(--ink);cursor:pointer;font-size:12px}
-.ticket.selected{background:#e6d7ff;border:2px solid var(--purple);font-weight:bold}
+.ticket{padding:8px 0;border:2px solid #dfd3e8;background:white;border-radius:7px;color:var(--ink);cursor:pointer;font-size:12px;font-weight:bold;transition:all 0.2s ease}
+.ticket:hover{border-color:var(--purple);background:#f5f0ff}
+.ticket.selected{background:linear-gradient(135deg,#e6d7ff,#f0e9ff);border:2px solid var(--purple);font-weight:bold;color:var(--purple);box-shadow:0 0 10px rgba(112,69,165,0.2)}
 .ticket.locked{background:#eee;color:#999;text-decoration:line-through;cursor:not-allowed}
 .muted{color:var(--muted);font-size:13px}
-.summary{background:#f7f2fb;padding:13px;border-radius:12px;line-height:1.5}
+.summary{background:linear-gradient(135deg,#f7f2fb,#f5f0ff);padding:15px;border-radius:12px;line-height:1.6;border:2px solid #e6d7ff;font-weight:bold;color:var(--purple)}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .hidden{display:none!important}
-footer{text-align:center;color:var(--muted);padding:18px}
-@media(max-width:420px){main{padding:10px}.grid{gap:3px}.ticket{font-size:10px;padding:7px 0}.stats{gap:6px}.stat{padding:12px 4px}.stat b{font-size:20px}}
+footer{text-align:center;color:var(--muted);padding:20px;margin-top:20px;border-top:2px solid #eadff0}
+label{display:block;margin:12px 0 8px;font-weight:bold;color:var(--ink)}
+input[type="checkbox"]{margin-right:8px;width:18px;height:18px;cursor:pointer}
+@media(max-width:420px){main{padding:10px}.grid{gap:3px}.ticket{font-size:10px;padding:7px 0}.stats{gap:6px}.stat{padding:12px 8px}.stat b{font-size:20px}.arrow{width:40px;height:40px;padding:8px 12px}.gallery-container{max-width:100%}}
 </style>
 </head>
 <body>
 <main>
 <section class="hero">
-  <img src="meirinha.jpg" alt="Foto da Meirinha">
-  <h1>Rifa Solidária da Meirinha 🐾</h1>
-  <p>Ajude a Meirinha com seu tratamento, exames e cirurgia. Cada número comprado faz a diferença.</p>
+  <h1>🐾 Rifa Solidária da Meirinha 🐾</h1>
+  <p>Ajude a Meirinha com seu tratamento, exames e cirurgia.<br>Cada número comprado faz a diferença! 💜</p>
+  
+  <div class="gallery-container">
+    <div class="gallery" id="gallery">
+      <img src="meirinha.jpg" alt="Meirinha foto 1" class="active">
+      <img src="meirinha1.jpg" alt="Meirinha foto 2">
+      <img src="meirinha2.jpg" alt="Meirinha foto 3">
+      <img src="meirinha3.jpg" alt="Meirinha foto 4">
+    </div>
+    <button class="arrow prev" onclick="changeSlide(-1)">❮</button>
+    <button class="arrow next" onclick="changeSlide(1)">❯</button>
+    <div class="gallery-controls">
+      <span class="dot active" onclick="goToSlide(0)"></span>
+      <span class="dot" onclick="goToSlide(1)"></span>
+      <span class="dot" onclick="goToSlide(2)"></span>
+      <span class="dot" onclick="goToSlide(3)"></span>
+    </div>
+  </div>
 </section>
 
 <section class="stats">
-  <div class="stat"><b>R$ 5,00</b><span>Por número</span></div>
-  <div class="stat"><b>R$ 200,00</b><span>Prêmio</span></div>
-  <div class="stat"><b>001–300</b><span>Números</span></div>
+  <div class="stat">
+    <b>R$ 5,00</b>
+    <span>💵 Por número</span>
+  </div>
+  <div class="stat">
+    <b>R$ 200,00</b>
+    <span>🎁 Prêmio</span>
+  </div>
+  <div class="stat">
+    <b>001–300</b>
+    <span>🎫 Números</span>
+  </div>
 </section>
 
 <section class="panel">
-<h2>Como participar</h2>
+<h2>💖 Como participar</h2>
 <div class="notice">
 <strong>1.</strong> Faça o Pix de R$ 5,00 por número.<br>
-<strong>2.</strong> Envie o comprovante pelo WhatsApp.<br>
-<strong>3.</strong> Após a confirmação manual, o responsável libera o número escolhido.
+<strong>2.</strong> Escolha seus números assim que fizer o Pix.<br>
+<strong>3.</strong> Envie o comprovante pelo WhatsApp para confirmar o pagamento.
 </div>
-<h3>Pagamento via Pix</h3>
+
+<h3 style="color:var(--purple);margin-top:20px">💳 Pagamento via Pix</h3>
 <div class="pix">
-<strong>DoacaoGatinhaMeirinha@gmail.com</strong><br>
-<span class="muted">Titular: Sophia Vitória Silva</span><br><br>
-<button class="btn secondary" id="copyPix">Copiar chave Pix</button>
+<strong>📧 DoacaoGatinhaMeirinha@gmail.com</strong><br><br>
+<span class="muted">👤 Titular: Sophia Vitória Silva</span><br><br>
+<button class="btn secondary" id="copyPix">📋 Copiar chave Pix</button>
 </div>
-<p><a class="btn" href="https://wa.me/5534998063486" target="_blank" rel="noopener">Enviar comprovante pelo WhatsApp</a></p>
-<p class="muted">Contato: (34) 99806-3486</p>
+
+<p style="margin-top:15px"><a class="btn" href="https://wa.me/5534998063486" target="_blank" rel="noopener">💬 Enviar comprovante pelo WhatsApp</a></p>
+<p class="muted">📱 Contato: (34) 99806-3486</p>
 </section>
 
 <section class="panel">
-<h2>Cartela da rifa</h2>
-<div class="notice">A seleção é liberada somente depois que você marcar que fez o Pix. A confirmação definitiva depende do responsável.</div>
-<p><label><input type="checkbox" id="paid"> Já fiz o Pix e vou enviar o comprovante.</label></p>
+<h2>🎫 Cartela da rifa</h2>
+<div class="notice">Selecione seus números assim que fizer o Pix. O pagamento será confirmado pelo responsável após receber o comprovante.</div>
+<p><label><input type="checkbox" id="paid"> ✅ Já fiz o Pix e vou escolher meus números.</label></p>
 <div id="cartela" class="hidden">
-<p class="muted">Toque nos números desejados para selecionar.</p>
+<p class="muted">👉 Toque nos números desejados para selecionar.</p>
 <div class="grid" id="grid"></div>
 <div class="summary" id="summary">Nenhum número selecionado.</div>
-<p><button class="btn secondary" id="clear">Limpar seleção</button></p>
+<p><button class="btn secondary" id="clear">🔄 Limpar seleção</button></p>
 </div>
 </section>
 
 <section class="panel">
-<h2>Enviar solicitação</h2>
-<label for="name">Seu nome</label>
+<h2>📤 Enviar solicitação</h2>
+<label for="name">👤 Seu nome</label>
 <input class="field" id="name" placeholder="Nome completo">
-<label for="note">Referência do comprovante</label>
+<label for="note">📝 Referência do comprovante</label>
 <input class="field" id="note" placeholder="Ex.: Pix feito às 15h">
-<button class="btn" id="send" disabled>Enviar pedido pelo WhatsApp</button>
-<p class="muted">O responsável confirmará o pagamento e a disponibilidade dos números.</p>
+<button class="btn" id="send" disabled>📲 Enviar pedido pelo WhatsApp</button>
+<p class="muted">✨ Enviamos a solicitação direto para o WhatsApp. O responsável confirmará o pagamento e liberará os números.</p>
 <div id="message" class="notice hidden"></div>
 </section>
 
 <section class="panel">
-<h2>Sobre o sorteio</h2>
-<p>O prêmio será de <strong>R$ 200,00</strong>. O sorteio será realizado após a venda de todos os números.</p>
+<h2>🎰 Sobre o sorteio</h2>
+<p>O prêmio será de <strong>R$ 200,00</strong>. O sorteio será realizado após a venda de todos os números. 🍀</p>
 </section>
-<footer>Obrigada por ajudar a Meirinha! 💜🐱</footer>
+
+<footer>Obrigada por ajudar a Meirinha! 💜🐱✨</footer>
 </main>
 
 <script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('#gallery img');
+const dots = document.querySelectorAll('.dot');
+let autoSlideTimer;
+
+function showSlide(n) {
+  slides.forEach(slide => slide.classList.remove('active'));
+  dots.forEach(dot => dot.classList.remove('active'));
+  
+  currentSlide = (n + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
+  dots[currentSlide].classList.add('active');
+  
+  clearTimeout(autoSlideTimer);
+  autoSlideTimer = setTimeout(() => changeSlide(1), 4000);
+}
+
+function changeSlide(n) {
+  showSlide(currentSlide + n);
+}
+
+function goToSlide(n) {
+  showSlide(n);
+}
+
+showSlide(0);
+
 const chosen=new Set(), price=5, phone="5534998063486";
 const grid=document.getElementById("grid"), summary=document.getElementById("summary");
 const paid=document.getElementById("paid"), cartela=document.getElementById("cartela");
@@ -112,6 +186,7 @@ for(let i=1;i<=300;i++){
  b.addEventListener("click",()=>{chosen.has(i)?chosen.delete(i):chosen.add(i);render()});
  grid.appendChild(b);
 }
+
 function render(){
  const list=[...chosen].sort((a,b)=>a-b);
  grid.querySelectorAll(".ticket").forEach((b,i)=>{
@@ -119,27 +194,30 @@ function render(){
    b.setAttribute("aria-pressed",String(chosen.has(i+1)));
  });
  summary.textContent=list.length
-   ? "Números: "+list.map(pad).join(", ")+" — Total: "+money(list.length*price)
+   ? "🎫 Números: "+list.map(pad).join(", ")+" — Total: "+money(list.length*price)
    : "Nenhum número selecionado.";
  send.disabled=!paid.checked||!list.length;
 }
+
 paid.addEventListener("change",()=>{cartela.classList.toggle("hidden",!paid.checked);render()});
 document.getElementById("clear").addEventListener("click",()=>{chosen.clear();render()});
 document.getElementById("copyPix").addEventListener("click",async()=>{
  const key="DoacaoGatinhaMeirinha@gmail.com";
- try{await navigator.clipboard.writeText(key);alert("Chave Pix copiada!")}
+ try{await navigator.clipboard.writeText(key);alert("✅ Chave Pix copiada!")}
  catch(e){alert("Copie a chave Pix: "+key)}
 });
+
 send.addEventListener("click",()=>{
  const list=[...chosen].sort((a,b)=>a-b);
- const msg="Olá! Fiz o Pix da Rifa Solidária da Meirinha.%0A"+
+ const msg="Olá! 🐱 Fiz o Pix da Rifa Solidária da Meirinha.%0A"+
  "Nome: "+encodeURIComponent(nameInput.value||"Não informado")+
- "%0ANúmeros solicitados: "+encodeURIComponent(list.map(pad).join(", "))+
- "%0ATotal: "+encodeURIComponent(money(list.length*price))+
- "%0AReferência: "+encodeURIComponent(note.value||"Vou enviar o comprovante")+
- "%0APor favor, confirme o pagamento e a disponibilidade dos números.";
+ "%0A🎫 Números solicitados: "+encodeURIComponent(list.map(pad).join(", "))+
+ "%0A💵 Total: "+encodeURIComponent(money(list.length*price))+
+ "%0A📝 Referência: "+encodeURIComponent(note.value||"Vou enviar o comprovante")+
+ "%0A%0APor favor, confirme o pagamento e a disponibilidade dos números. Obrigado! 💜";
  window.open("https://wa.me/"+phone+"?text="+msg,"_blank");
 });
+
 render();
 </script>
 </body>
