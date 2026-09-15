@@ -45,6 +45,7 @@ button,a{font:inherit}
 .ticket:hover{border-color:var(--purple);background:#f5f0ff}
 .ticket.selected{background:linear-gradient(135deg,#e6d7ff,#f0e9ff);border:2px solid var(--purple);font-weight:bold;color:var(--purple);box-shadow:0 0 10px rgba(112,69,165,0.2)}
 .ticket.locked{background:#eee;color:#999;text-decoration:line-through;cursor:not-allowed}
+.ticket.sold{background:linear-gradient(135deg,#ffecec,#ffe6e6);border:2px solid #ff6b6b;color:#ff6b6b;cursor:not-allowed}
 .muted{color:var(--muted);font-size:13px}
 .summary{background:linear-gradient(135deg,#f7f2fb,#f5f0ff);padding:15px;border-radius:12px;line-height:1.6;border:2px solid #e6d7ff;font-weight:bold;color:var(--purple)}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -61,7 +62,11 @@ input[type="checkbox"]{margin-right:8px;width:18px;height:18px;cursor:pointer}
 .surgery-info strong{color:var(--purple)}
 .surgery-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:15px}
 .surgery-buttons .btn{padding:12px 16px;font-size:14px}
-@media(max-width:768px){.surgery-content{grid-template-columns:1fr}.grid{gap:3px}.ticket{font-size:10px;padding:7px 0}.stats{gap:6px}.stat{padding:12px 8px}.stat b{font-size:20px}.arrow{width:40px;height:40px;padding:8px 12px}.gallery-container{max-width:100%}.surgery-buttons{flex-direction:column}}
+.payment-section{background:linear-gradient(135deg,#f0fff4,#e6ffe6);border-radius:18px;padding:20px;margin:20px 0;border:2px solid #b3ffb3}
+.payment-section h3{color:#2d5016;margin-top:0}
+.qr-container{text-align:center;padding:20px;background:white;border-radius:15px;margin:15px 0}
+.qr-container img{max-width:300px;width:100%;height:auto}
+@media(max-width:768px){.surgery-content{grid-template-columns:1fr}.grid{gap:3px}.ticket{font-size:10px;padding:7px 0}.stats{gap:6px}.stat{padding:12px 8px}.stat b{font-size:20px}.arrow{width:40px;height:40px;padding:8px 12px}.gallery-container{max-width:100%}.surgery-buttons{flex-direction:column}.qr-container img{max-width:100%}}
 </style>
 </head>
 <body>
@@ -128,31 +133,40 @@ input[type="checkbox"]{margin-right:8px;width:18px;height:18px;cursor:pointer}
   </div>
 </section>
 
+<section class="payment-section">
+<h2>💳 Pagamento via Mercado Pago</h2>
+<h3>Escaneie o QR Code ou clique no botão abaixo para pagar</h3>
+<div class="qr-container" id="qrContainer"></div>
+<div style="text-align:center;margin:15px 0">
+  <button class="btn" id="paymentBtn" onclick="initiatePayment()">💳 Pagar com Mercado Pago</button>
+</div>
+</section>
+
 <section class="panel">
 <h2>💖 Como participar</h2>
 <div class="notice">
-<strong>1.</strong> Faça o Pix de R$ 5,00 por número.<br>
-<strong>2.</strong> Escolha seus números assim que fizer o Pix.<br>
-<strong>3.</strong> Envie o comprovante pelo WhatsApp para confirmar o pagamento.
+<strong>1.</strong> Faça o pagamento de R$ 5,00 por número via Mercado Pago.<br>
+<strong>2.</strong> Escolha seus números assim que o pagamento for confirmado.<br>
+<strong>3.</strong> Seus números ficarão marcados no sistema automaticamente!
 </div>
 
-<h3 style="color:var(--purple);margin-top:20px">💳 Pagamento via Pix</h3>
+<h3 style="color:var(--purple);margin-top:20px">💳 Pagamento via Pix (alternativo)</h3>
 <div class="pix">
 <strong>📧 DoacaoGatinhaMeirinha@gmail.com</strong><br><br>
 <span class="muted">👤 Titular: Sophia Vitória Silva</span><br><br>
 <button class="btn secondary" id="copyPix">📋 Copiar chave Pix</button>
 </div>
 
-<p style="margin-top:15px"><a class="btn" href="https://wa.me/5534998063486" target="_blank" rel="noopener">💬 Enviar comprovante pelo WhatsApp</a></p>
+<p style="margin-top:15px"><a class="btn secondary" href="https://wa.me/5534998063486" target="_blank" rel="noopener">💬 Enviar comprovante pelo WhatsApp</a></p>
 <p class="muted">📱 Contato: (34) 99806-3486</p>
 </section>
 
 <section class="panel">
 <h2>🎫 Cartela da rifa</h2>
-<div class="notice">Selecione seus números assim que fizer o Pix. O pagamento será confirmado pelo responsável após receber o comprovante.</div>
-<p><label><input type="checkbox" id="paid"> ✅ Já fiz o Pix e vou escolher meus números.</label></p>
+<div class="notice">Selecione seus números após confirmar o pagamento. Os números já vendidos aparecem marcados em vermelho e não podem ser selecionados.</div>
+<p><label><input type="checkbox" id="paid"> ✅ Confirmei o pagamento e vou escolher meus números.</label></p>
 <div id="cartela" class="hidden">
-<p class="muted">👉 Toque nos números desejados para selecionar.</p>
+<p class="muted">👉 Toque nos números desejados para selecionar. (Números vermelhos já foram vendidos)</p>
 <div class="grid" id="grid"></div>
 <div class="summary" id="summary">Nenhum número selecionado.</div>
 <p><button class="btn secondary" id="clear">🔄 Limpar seleção</button></p>
@@ -178,7 +192,11 @@ input[type="checkbox"]{margin-right:8px;width:18px;height:18px;cursor:pointer}
 <footer>Obrigada por ajudar a Meirinha! 💜🐱✨</footer>
 </main>
 
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 <script>
+// Inicializar Mercado Pago
+const mp = new MercadoPago('APP_USR-527d39e4-450d-4ee9-ad12-0c40d1c4d00d');
+
 let currentSlide = 0;
 const slides = document.querySelectorAll('#gallery img');
 const dots = document.querySelectorAll('.dot');
@@ -213,19 +231,34 @@ const send=document.getElementById("send"), nameInput=document.getElementById("n
 const money=n=>n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 const pad=n=>String(n).padStart(3,"0");
 
+// Números já vendidos (inicialmente vazio - será atualizado)
+const soldNumbers = new Set();
+
 for(let i=1;i<=300;i++){
  const b=document.createElement("button");
  b.className="ticket";b.type="button";b.textContent=pad(i);
  b.setAttribute("aria-label","Número "+pad(i));
- b.addEventListener("click",()=>{chosen.has(i)?chosen.delete(i):chosen.add(i);render()});
+ b.addEventListener("click",()=>{
+   if(!soldNumbers.has(i)){
+     chosen.has(i)?chosen.delete(i):chosen.add(i);
+     render();
+   }
+ });
  grid.appendChild(b);
 }
 
 function render(){
  const list=[...chosen].sort((a,b)=>a-b);
  grid.querySelectorAll(".ticket").forEach((b,i)=>{
-   b.classList.toggle("selected",chosen.has(i+1));
-   b.setAttribute("aria-pressed",String(chosen.has(i+1)));
+   const num = i+1;
+   b.classList.remove("selected","sold");
+   if(soldNumbers.has(num)){
+     b.classList.add("sold");
+     b.setAttribute("aria-pressed","false");
+   } else {
+     b.classList.toggle("selected",chosen.has(num));
+     b.setAttribute("aria-pressed",String(chosen.has(num)));
+   }
  });
  summary.textContent=list.length
    ? "🎫 Números: "+list.map(pad).join(", ")+" — Total: "+money(list.length*price)
@@ -251,6 +284,38 @@ send.addEventListener("click",()=>{
  "%0A%0APor favor, confirme o pagamento e a disponibilidade dos números. Obrigado! 💜";
  window.open("https://wa.me/"+phone+"?text="+msg,"_blank");
 });
+
+// Função para iniciar pagamento
+function initiatePayment() {
+  const amount = 5; // R$ 5,00 por número
+  
+  mp.bricks().create("payment", {
+    initialization: {
+      amount: amount,
+    },
+    customization: {
+      visual: {
+        style: {
+          theme: "default"
+        }
+      },
+      paymentMethods: {
+        maxInstallments: 1,
+        excluded_payment_methods: [],
+        excluded_payment_types: []
+      }
+    },
+    callbacks: {
+      onReady: () => {},
+      onSubmit: async (formData) => {
+        console.log("Formulário enviado", formData);
+      },
+      onError: (error) => {
+        console.error("Erro no pagamento", error);
+      }
+    }
+  });
+}
 
 render();
 </script>
